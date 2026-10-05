@@ -2,12 +2,33 @@ import { useState } from "react"
 import Button from "../components/Button"
 import Input from "../components/Input"
 import { Link } from "react-router-dom"
+import {api} from "../api/api"
+
 
 const SignUp = () => {
     const [error, setError] = useState("")
+ 
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        setError("")
 
-    const handleSubmit = () => {}
+        if (e.target.password.value !== e.target.password2.value) {
+        setError("Пароли не совпадают")
+        return
+        }
 
+        const user = {
+        username: e.target.username.value,
+        email: e.target.email.value,
+        password: e.target.password.value,
+    }
+    try {
+        const data=await api.registerUser(user)
+    } catch (error) {
+        setError(error.response.data.error)
+        console.error(error)
+    }
+}
     return (
         <div className="auth-page">
             <div className="auth-container">
@@ -18,6 +39,8 @@ const SignUp = () => {
                         id="username"
                         name="username"
                         type="text"
+                        minlenght={6}
+                        maxlenght={15}
                         label="Имя пользователя"
                         required
                         placeholder="Введите имя пользователя"
@@ -26,6 +49,8 @@ const SignUp = () => {
                         id="email"
                         name="email"
                         type="email"
+                        minlenght={6}
+                        maxlenght={15}
                         label="Почта"
                         required
                         placeholder="Введите почту"
@@ -34,6 +59,8 @@ const SignUp = () => {
                         id="password"
                         name="password"
                         type="password"
+                        minlenght={6}
+                        maxlenght={15}
                         label="Пароль"
                         required
                         placeholder="Введите пароль"
@@ -42,6 +69,8 @@ const SignUp = () => {
                         id="password2"
                         name="password2"
                         type="password"
+                        minlenght={6}
+                        maxlenght={15}
                         label="Подтверждение пароля"
                         required
                         placeholder="Подтвердите пароль"
